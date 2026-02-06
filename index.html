@@ -1,0 +1,245 @@
+<?php
+// index.php (só front + JS; sem backend ainda)
+?>
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ACAMP² • Pagamentos</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- HEADER (fixo no topo do painel) -->
+    <header class="topbar">
+      <div class="topbar__title">ACAMP²</div>
+      <div class="topbar__subtitle">Painel Financeiro</div>
+    </header>
+
+    <!-- LOGIN -->
+    <main id="screen-login" class="screen screen--active">
+      <section class="card">
+        <h1 class="h1">Entrar</h1>
+        <p class="muted">Selecione seu nome e informe o token.</p>
+
+        <label class="label" for="loginName">Nome</label>
+        <select id="loginName" class="input">
+          <!-- preenchido via JS -->
+        </select>
+
+        <label class="label" for="loginToken">Token</label>
+        <input id="loginToken" class="input" type="password" inputmode="numeric" placeholder="Ex: 482913" />
+
+        <button id="btnLogin" class="btn btn--primary">Acessar painel</button>
+
+        <div id="loginError" class="alert alert--danger hidden" role="alert">
+          Nome ou token inválido. Verifique e tente novamente.
+        </div>
+
+        <div class="footnote">
+          <span class="dot"></span> Foco total em celular • ACAMP²
+        </div>
+      </section>
+    </main>
+
+    <!-- PAINEL -->
+    <main id="screen-panel" class="screen">
+      <section class="panel">
+        <div class="panel__who">
+          <div class="panel__name" id="userName">—</div>
+          <div class="panel__statusline">
+            <span class="badge" id="userStatusBadge">—</span>
+          </div>
+        </div>
+
+        <!-- Mensagens condicionais -->
+        <div id="statusMsgVaga" class="alert alert--danger hidden">
+          Efetue o seu pagamento para confirmar sua vaga.
+        </div>
+        <div id="statusMsgPendente" class="alert alert--warning hidden">
+          Existem faturas em atraso, pague sua fatura para não perder sua vaga.
+        </div>
+
+        <!-- Valor pago (foco do app) -->
+        <section class="paid">
+          <div class="paid__label">Valor pago</div>
+          <div class="paid__value" id="paidValue">R$ 0,00</div>
+          <div class="paid__hint muted">Esse é o total já confirmado no sistema.</div>
+        </section>
+
+        <!-- 4 botões -->
+        <section class="grid4">
+          <button class="tile" data-action="fatura">
+            <div class="tile__icon">🧾</div>
+            <div class="tile__text">Fatura</div>
+          </button>
+          <button class="tile" data-action="dependentes">
+            <div class="tile__icon">👥</div>
+            <div class="tile__text">Dependentes</div>
+          </button>
+          <button class="tile" data-action="extrato">
+            <div class="tile__icon">📄</div>
+            <div class="tile__text">Extrato</div>
+          </button>
+          <button class="tile" data-action="dados">
+            <div class="tile__icon">🪪</div>
+            <div class="tile__text">Dados pessoais</div>
+          </button>
+        </section>
+
+        <!-- linha inferior: "0 de 6" + pagar -->
+        <section class="bottomrow">
+          <div class="faturas">
+            <div class="faturas__count" id="faturasCount">0 de 6 faturas pagas</div>
+            <div class="faturas__mini muted" id="faturasMini">Parcelas: R$ 20,00 • Total: R$ 120,00</div>
+          </div>
+          <button class="btn btn--accent" id="btnPay">Efetuar pagamento</button>
+        </section>
+
+        <section class="logout">
+          <button class="btn btn--ghost" id="btnLogout">Sair</button>
+        </section>
+      </section>
+    </main>
+
+
+    <!-- DETALHES DA FATURA -->
+<main id="screen-fatura-detalhe" class="screen">
+  <section class="panel">
+    <div class="invTop">
+      <div class="invTitle">Detalhes da fatura</div>
+      <button class="btn btn--ghost btn--mini" id="btnBackFaturaDetalhe">Voltar</button>
+    </div>
+
+    <div class="invMeta">
+      <div class="invRow">
+        <div class="invLabel muted">Mês de referência</div>
+        <div class="invValue" id="invMesRef">—</div>
+      </div>
+
+      <div class="invRow">
+        <div class="invLabel muted">Situação</div>
+        <div class="invStatus" id="invStatusChip">—</div>
+      </div>
+    </div>
+
+    <div class="invMain">
+      <div class="invMainLeft">
+        <div class="invBigLabel muted">Valor</div>
+        <div class="invBigValue" id="invValor">R$ 0,00</div>
+      </div>
+
+      <div class="invMainRight">
+        <div class="invBigLabel muted">Vencimento</div>
+        <div class="invBigValue invBigValue--date" id="invVenc">—</div>
+      </div>
+    </div>
+
+    <div id="invPayArea" class="invPay">
+      <button class="btn btn--accent" id="btnEfetuarPagamento">Efetuar pagamento</button>
+      <div class="muted invPayHint">Ao clicar, vamos abrir o fluxo de pagamento (Pix/Link).</div>
+    </div>
+
+    <div id="invInfoPaid" class="alert hidden">
+      Fatura paga ✅ Nenhuma ação necessária.
+    </div>
+  </section>
+</main>
+
+<!-- EXTRATO -->
+<main id="screen-extrato" class="screen">
+  <section class="panel">
+    <div class="invTop">
+      <div class="invTitle">Extrato</div>
+      <button class="btn btn--ghost btn--mini" id="btnBackExtrato">Voltar</button>
+    </div>
+
+    <div class="invMeta" style="margin-top: 14px;">
+      <div class="invRow">
+        <div class="invLabel muted">Total pago</div>
+        <div class="invValue" id="extTotalPago">R$ 0,00</div>
+      </div>
+      <div class="invRow">
+        <div class="invLabel muted">Quantidade</div>
+        <div class="invValue" id="extQtd">0 faturas</div>
+      </div>
+    </div>
+
+    <div id="extEmpty" class="alert hidden" style="margin-top:14px;">
+      Nenhuma fatura paga ainda.
+    </div>
+
+    <div id="extList" class="extList"></div>
+  </section>
+</main>
+
+<!-- DEPENDENTES -->
+<main id="screen-dependentes" class="screen">
+  <section class="panel">
+    <div class="invTop">
+      <div class="invTitle">Dependentes</div>
+      <button class="btn btn--ghost btn--mini" id="btnBackDependentes">Voltar</button>
+    </div>
+
+    <div id="depEmpty" class="alert hidden" style="margin-top:14px;">
+      Nenhum dependente cadastrado.
+    </div>
+
+    <div class="infoBox" style="margin-top:14px;">
+      <div class="infoRow">
+        <div class="infoLabel muted">Dependentes</div>
+        <div class="infoValue" id="depNome">—</div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- DADOS PESSOAIS -->
+<main id="screen-dados" class="screen">
+  <section class="panel">
+    <div class="invTop">
+      <div class="invTitle">Dados pessoais</div>
+      <button class="btn btn--ghost btn--mini" id="btnBackDados">Voltar</button>
+    </div>
+
+    <div class="infoBox" style="margin-top:14px;">
+      <div class="infoRow">
+        <div class="infoLabel muted">Nome</div>
+        <div class="infoValue" id="dpNome">—</div>
+      </div>
+      <div class="infoRow">
+        <div class="infoLabel muted">ID de inscrição</div>
+        <div class="infoValue" id="dpId">—</div>
+      </div>
+      <div class="infoRow">
+        <div class="infoLabel muted">Status</div>
+        <div class="infoValue" id="dpStatus">—</div>
+      </div>
+      <div class="infoRow">
+        <div class="infoLabel muted">Valor pago</div>
+        <div class="infoValue" id="dpPago">—</div>
+      </div>
+      <div class="infoRow">
+        <div class="infoLabel muted">Professor responsável</div>
+        <div class="infoValue" id="dpProfessor">—</div>
+      </div>
+      <div class="infoRow">
+        <div class="infoLabel muted">Dependentes</div>
+        <div class="infoValue" id="dpDependentes">—</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+    <!-- Toast simples -->
+    <div id="toast" class="toast hidden"></div>
+
+  </div>
+
+  <script src="assets/faturas.db.js"></script>
+<script src="assets/app.js"></script>
+
+</body>
+</html>
