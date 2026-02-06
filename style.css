@@ -1,0 +1,530 @@
+:root{
+  /* base suave */
+  --bg:#f3f6fb;
+  --card:#ffffff;
+  --surface:#f7f9fd;
+
+  --text:#0f172a;
+  --muted:#667085;
+
+  /* cores discretas */
+  --brand:#2d6cdf;
+  --brandSoft:#eaf1ff;
+
+  --ok:#15803d;
+  --okBg:#eaf7ef;
+
+  --warn:#b45309;
+  --warnBg:#fff4e6;
+
+  --bad:#b91c1c;
+  --badBg:#fdecec;
+
+  --border:#e6eaf2;
+  --shadow: 0 10px 26px rgba(15, 23, 42, .08);
+
+  --r:16px;
+
+  --safeTop: env(safe-area-inset-top, 0px);
+  --safeBottom: env(safe-area-inset-bottom, 0px);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background:
+    radial-gradient(900px 600px at 25% -10%, rgba(45,108,223,.10), transparent 60%),
+    linear-gradient(180deg, #f7f9ff, var(--bg));
+  color: var(--text);
+}
+
+/* MOBILE-FIRST: ocupa a tela e só limita um pouco em telas maiores */
+.app{
+  min-height:100%;
+  width:100%;
+  padding: calc(10px + var(--safeTop)) 14px calc(18px + var(--safeBottom));
+  margin: 0 auto;
+  max-width: 560px; /* em celular não faz diferença; só evita “estourar” em telas grandes */
+}
+
+/* Topbar com cara de app */
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 0 -14px 12px;
+  padding: calc(12px + var(--safeTop)) 14px 12px;
+  background: rgba(243,246,251,.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(230,234,242,.85);
+}
+
+.topbar__title{
+  text-align:center;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing:.6px;
+}
+
+.topbar__subtitle{
+  text-align:center;
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* Screens */
+.screen{ display:none; }
+.screen--active{ display:block; }
+
+/* Cards principais (login e painel) */
+.card, .panel{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+/* Texto */
+.h1{
+  font-size: 18px;
+  font-weight: 900;
+  margin: 4px 0 6px;
+}
+.muted{ color: var(--muted); }
+
+.label{
+  display:block;
+  margin: 14px 0 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* Inputs */
+.input{
+  width:100%;
+  border-radius: 14px;
+  padding: 12px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  outline:none;
+}
+.input:focus{
+  border-color: rgba(45,108,223,.55);
+  box-shadow: 0 0 0 4px rgba(45,108,223,.12);
+  background:#fff;
+}
+
+/* Botões */
+.btn{
+  width:100%;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-weight: 900;
+  font-size: 15px;
+  cursor:pointer;
+  transition: transform .08s ease, filter .12s ease;
+}
+.btn:active{ transform: scale(.99); filter: brightness(.98); }
+
+.btn--primary{
+  background: linear-gradient(180deg, rgba(45,108,223,1), rgba(34,94,193,1));
+  color:#fff;
+}
+
+.btn--accent{
+  background: linear-gradient(180deg, rgba(21,163,74,1), rgba(21,128,61,1));
+  color:#fff;
+  width:auto;
+  margin-top: 0;
+  padding: 12px 14px;
+}
+
+.btn--ghost{
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Alerts suaves */
+.alert{
+  margin-top: 12px;
+  border-radius: 16px;
+  padding: 12px 12px;
+  font-size: 13.5px;
+  font-weight: 800;
+  border: 1px solid var(--border);
+}
+.alert--danger{
+  background: var(--badBg);
+  color: var(--bad);
+  border-color: rgba(185,28,28,.16);
+}
+.alert--warning{
+  background: var(--warnBg);
+  color: var(--warn);
+  border-color: rgba(180,83,9,.16);
+}
+.hidden{ display:none; }
+
+/* Cabeçalho do painel */
+.panel__who{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.panel__name{
+  font-size: 16px;
+  font-weight: 900;
+}
+
+/* Badge (com cor via JS se você já colocou as classes badge--*) */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 900;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.badge--vaga{ background: var(--badBg); color: var(--bad); border-color: rgba(185,28,28,.16); }
+.badge--regular{ background: var(--okBg); color: var(--ok); border-color: rgba(21,163,74,.16); }
+.badge--pendente{ background: var(--warnBg); color: var(--warn); border-color: rgba(180,83,9,.16); }
+
+/* Valor pago em destaque (sem exagerar) */
+.paid{
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 20px;
+  background:
+    radial-gradient(700px 260px at 10% 0%, rgba(45,108,223,.14), transparent 55%),
+    linear-gradient(180deg, rgba(45,108,223,.08), #fff);
+  border: 1px solid rgba(45,108,223,.16);
+}
+.paid__label{
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--muted);
+}
+.paid__value{
+  margin-top: 6px;
+  font-size: 34px;
+  font-weight: 1000;
+  letter-spacing:.2px;
+}
+.paid__hint{
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 4 botões em grid (como você queria, sem virar lista) */
+.grid4{
+  margin-top: 14px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.tile{
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 14px 12px;
+  min-height: 76px;
+  box-shadow: 0 6px 14px rgba(15,23,42,.04);
+  cursor:pointer;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.tile:active{ transform: scale(.99); }
+
+.tile__icon{
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  display:grid;
+  place-items:center;
+  background: rgba(45,108,223,.10);
+  color: var(--brand);
+  font-size: 18px;
+  font-weight: 900;
+}
+.tile__text{
+  margin-top: 10px;
+  font-weight: 900;
+  font-size: 14px;
+}
+
+/* Linha inferior */
+.bottomrow{
+  margin-top: 14px;
+  display:flex;
+  gap: 10px;
+  align-items:stretch;
+}
+.faturas{
+  flex:1;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 6px 14px rgba(15,23,42,.04);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.faturas__count{
+  font-size: 13.5px;
+  font-weight: 1000;
+}
+.faturas__mini{
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Logout */
+.logout{ margin-top: 12px; }
+
+/* Toast */
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + var(--safeBottom));
+  transform: translateX(-50%);
+  background: rgba(15,23,42,.92);
+  color:#fff;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+  max-width: min(560px, calc(100% - 24px));
+  text-align:center;
+}
+/* ================================
+   AJUSTE MOBILE – SEM MARGENS / SEM RADIUS
+   ================================ */
+@media (max-width: 600px){
+
+  /* tira margens externas */
+  .app{
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  /* remove bordas arredondadas, sem mudar layout */
+  .card,
+  .panel,
+  .paid,
+  .tile,
+  .faturas,
+  .btn,
+  .alert,
+  .badge,
+  .input{
+    border-radius: 0 !important;
+  }
+
+  /* topbar edge-to-edge */
+  .topbar{
+    margin: 0;
+    border-radius: 0;
+  }
+
+  /* mantém espaçamento interno confortável */
+  .card,
+  .panel{
+    padding: 16px;
+  }
+}
+/* ===== Detalhes da fatura ===== */
+.btn--mini{
+  width:auto;
+  margin-top: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.invTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.invTitle{
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.invMeta{
+  margin-top: 14px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.invRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.invLabel{
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.invValue{
+  font-size: 13.5px;
+  font-weight: 900;
+}
+
+.invStatus{
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 900;
+  background: #fff;
+}
+
+/* estados */
+.invStatus--aberta{ background: #f1f5f9; color:#334155; border-color:#e2e8f0; }
+.invStatus--atrasada{ background: var(--badBg); color: var(--bad); border-color: rgba(185,28,28,.16); }
+.invStatus--paga{ background: var(--okBg); color: var(--ok); border-color: rgba(21,163,74,.16); }
+
+.invMain{
+  margin-top: 14px;
+  display:flex;
+  gap: 10px;
+}
+.invMainLeft, .invMainRight{
+  flex:1;
+  padding: 14px 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+.invBigLabel{
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.invBigValue{
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 1000;
+}
+.invBigValue--date{
+  font-size: 18px;
+  font-weight: 1000;
+}
+
+.invPay{
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.invPayHint{
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+#invInfoPaid{
+  margin-top: 14px;
+}
+/* ===== Extrato ===== */
+.extList{
+  margin-top: 14px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.extItem{
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 12px;
+}
+
+.extTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 10px;
+}
+
+.extTitle{
+  font-weight: 1000;
+  font-size: 14px;
+}
+
+.extStatus{
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  background: var(--okBg);
+  color: var(--ok);
+}
+
+.extMeta{
+  margin-top: 8px;
+  display:flex;
+  justify-content:space-between;
+  gap: 10px;
+}
+
+.extMeta .muted{
+  font-size: 12px;
+  font-weight: 700;
+}
+.extValue{
+  font-size: 13px;
+  font-weight: 1000;
+}
+/* ===== Bloco padrão (linhas de informação) ===== */
+.infoBox{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.infoRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.infoLabel{
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.infoValue{
+  font-size: 13.5px;
+  font-weight: 900;
+  text-align:right;
+}
